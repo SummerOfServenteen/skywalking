@@ -22,7 +22,6 @@ import com.aliyun.openservices.ons.api.Message;
 import org.apache.skywalking.apm.agent.core.context.CarrierItem;
 import org.apache.skywalking.apm.agent.core.context.ContextCarrier;
 import org.apache.skywalking.apm.agent.core.context.ContextManager;
-import org.apache.skywalking.apm.agent.core.context.tag.StringTag;
 import org.apache.skywalking.apm.agent.core.context.trace.AbstractSpan;
 import org.apache.skywalking.apm.agent.core.context.trace.SpanLayer;
 import org.apache.skywalking.apm.agent.core.plugin.interceptor.enhance.EnhancedInstance;
@@ -49,8 +48,7 @@ public class ConsumeMessageInterceptor implements InstanceMethodsAroundIntercept
         span.setComponent(ComponentsDefine.ROCKET_MQ_CONSUMER);
         byte[] body = message.getBody();
         String messageBody = body == null ? "" : new String(body);
-        StringTag mqBody = new StringTag(11,"mq.body");
-        mqBody.set(span, messageBody);
+        span.tag("mq.body",messageBody);
         SpanLayer.asMQ(span);
         ContextManager.extract(getContextCarrierFromMessage(message));
 
